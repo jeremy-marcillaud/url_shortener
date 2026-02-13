@@ -1,0 +1,65 @@
+{
+  "id": "ab471b23-a561-4d9f-8fce-d9d098890d88",
+  "prevId": "00000000-0000-0000-0000-000000000000",
+  "version": "7",
+  "dialect": "postgresql",
+  "tables": {
+    "public.link": {
+      "name": "link",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "bigint",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "url": {
+          "name": "url",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "hash_value": {
+          "name": "hash_value",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {},
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {
+        "link_url_unique": {
+          "name": "link_url_unique",
+          "nullsNotDistinct": false,
+          "columns": [
+            "url"
+          ]
+        },
+        "link_hash_value_unique": {
+          "name": "link_hash_value_unique",
+          "nullsNotDistinct": false,
+          "columns": [
+            "hash_value"
+          ]
+        }
+      },
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    }
+  },
+  "enums": {},
+  "schemas": {},
+  "sequences": {},
+  "roles": {},
+  "policies": {},
+  "views": {},
+  "_meta": {
+    "columns": {},
+    "schemas": {},
+    "tables": {}
+  }
+}

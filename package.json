@@ -1,0 +1,13 @@
+{
+  "name": "stoik",
+  "private": true,
+  "workspaces": ["api", "front"],
+  "scripts": {
+    "dev": "npm run dev --workspaces",
+    "dev:api": "npm run dev -w api",
+    "dev:front": "npm run dev -w front",
+    "build": "npm run build --workspaces",
+    "build:api": "npm run build -w api",
+    "build:front": "npm run build -w front"
+  }
+}

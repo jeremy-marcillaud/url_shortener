@@ -1,13 +1,19 @@
 {
   "name": "stoik",
   "private": true,
-  "workspaces": ["api", "front"],
+  "workspaces": [
+    "api",
+    "front"
+  ],
   "scripts": {
-    "dev": "npm run dev --workspaces",
+    "dev": "concurrently \"npm run dev:api\" \"npm run dev:front\" --names api,front --prefix-colors blue,magenta",
     "dev:api": "npm run dev -w api",
     "dev:front": "npm run dev -w front",
     "build": "npm run build --workspaces",
     "build:api": "npm run build -w api",
     "build:front": "npm run build -w front"
+  },
+  "devDependencies": {
+    "concurrently": "^9.2.1"
   }
 }

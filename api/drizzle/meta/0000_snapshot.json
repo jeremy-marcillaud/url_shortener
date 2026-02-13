@@ -10,7 +10,7 @@
       "columns": {
         "id": {
           "name": "id",
-          "type": "bigint",
+          "type": "uuid",
           "primaryKey": true,
           "notNull": true
         },

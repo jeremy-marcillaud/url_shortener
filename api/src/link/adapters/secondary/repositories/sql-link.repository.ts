@@ -47,11 +47,7 @@ export class SqlLinkRepository implements LinkRepositoryPort {
   }
 
   public async save({ link }: { link: LinkDomain }): Promise<void> {
-    const linkDomainToPersistence = this.linkDomainMapper.toPersistence({
-      id: link.id,
-      url: link.url,
-      hashValue: link.hashValue,
-    });
+    const linkDomainToPersistence = this.linkDomainMapper.toPersistence(link);
 
     await this.database.insert(schema.links).values({
       id: linkDomainToPersistence.id,

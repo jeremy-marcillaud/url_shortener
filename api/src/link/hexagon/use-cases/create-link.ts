@@ -1,10 +1,10 @@
-import type { UniqueIdGeneratorPort } from '../ports/unique-id-generator.port';
+import type { HashGeneratorPort } from '../ports/hash-generator.port';
 import type { LinkRepositoryPort } from '../ports/link-repository.port';
 import { LinkDomain } from '../models/domain/link-domain';
 
 export class CreateLink {
   constructor(
-    private readonly uniqueIdGenerator: UniqueIdGeneratorPort,
+    private readonly hashGenerator: HashGeneratorPort,
     private readonly linkRepository: LinkRepositoryPort,
   ) {}
 
@@ -12,7 +12,7 @@ export class CreateLink {
     url,
   }: {
     url: string;
-  }): Promise<{ id: bigint; hash: string }> {
+  }): Promise<{ id: string; hash: string }> {
     const existing = await this.linkRepository.findByUrl(url);
 
     if (existing) {
@@ -22,13 +22,13 @@ export class CreateLink {
       };
     }
 
-    const id = this.uniqueIdGenerator.generate();
-    const link = LinkDomain.create({ id, url });
+    const hash = this.hashGenerator.generate();
+    const link = LinkDomain.create({ hash, url });
 
     await this.linkRepository.save({ link });
 
     return {
-      id,
+      id: link.id,
       hash: link.hashValue,
     };
   }

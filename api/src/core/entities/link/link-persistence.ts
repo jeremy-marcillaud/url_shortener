@@ -1,5 +1,5 @@
 export type LinkPersistence = {
-  id: bigint;
+  id: string;
   url: string;
   hashValue: string;
 };

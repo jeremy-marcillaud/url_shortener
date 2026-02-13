@@ -15,7 +15,7 @@ export class LinkController {
   async create(@Body() body: CreateLinkDto): Promise<CreateLinkResponseDto> {
     const result = await this.createLink.execute({ url: body.url });
     return {
-      id: result.id.toString(),
+      id: result.id,
       shortUrl: `${this.configService.getOrThrow('BASE_URL')}/${result.hash}`,
     };
   }

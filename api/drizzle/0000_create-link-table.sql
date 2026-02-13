@@ -1,5 +1,5 @@
 CREATE TABLE "link" (
-	"id" bigint PRIMARY KEY NOT NULL,
+	"id" uuid PRIMARY KEY NOT NULL,
 	"url" text NOT NULL,
 	"hash_value" text NOT NULL,
 	CONSTRAINT "link_url_unique" UNIQUE("url"),

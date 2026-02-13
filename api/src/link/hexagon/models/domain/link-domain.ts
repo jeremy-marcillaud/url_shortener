@@ -1,13 +1,13 @@
-import { toBase62 } from '../../utils/base62';
+import { randomUUID } from 'crypto';
 
 export class LinkDomain {
   constructor(
-    public readonly id: bigint,
+    public readonly id: string,
     public readonly url: string,
     public readonly hashValue: string,
   ) {}
 
-  static create({ id, url }: { id: bigint; url: string }): LinkDomain {
-    return new LinkDomain(id, url, toBase62(id));
+  static create({ hash, url }: { hash: string; url: string }): LinkDomain {
+    return new LinkDomain(randomUUID(), url, hash);
   }
 }

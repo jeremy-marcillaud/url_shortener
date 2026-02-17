@@ -12,6 +12,11 @@ import { SqlLinkRepository } from './adapters/secondary/repositories/sql-link.re
 import { LinkDomainMapper } from './adapters/secondary/mappers/domain/link-domain-mapper';
 import { RedirectLinkViewMapper } from './adapters/secondary/mappers/view/redirect-link-view-mapper';
 import { DatabaseModule } from '../database/database.module';
+import {
+  URL_SAFETY_CHECKER_PORT,
+  UrlSafetyCheckerPort,
+} from './hexagon/ports/url-safety-checker.port';
+import { GoogleSafeBrowsingChecker } from './adapters/secondary/safety/google-safe-browsing-checker';
 
 @Module({
   imports: [DatabaseModule],
@@ -28,12 +33,21 @@ import { DatabaseModule } from '../database/database.module';
       useClass: SqlLinkRepository,
     },
     {
+      provide: URL_SAFETY_CHECKER_PORT,
+      useClass: GoogleSafeBrowsingChecker,
+    },
+    {
       provide: CreateLink,
       useFactory: (
         hashGenerator: HashGeneratorPort,
         linkRepository: LinkRepositoryPort,
-      ) => new CreateLink(hashGenerator, linkRepository),
-      inject: [HASH_GENERATOR_PORT, LINK_REPOSITORY_PORT],
+        urlSafetyCheck: UrlSafetyCheckerPort,
+      ) => new CreateLink(hashGenerator, linkRepository, urlSafetyCheck),
+      inject: [
+        HASH_GENERATOR_PORT,
+        LINK_REPOSITORY_PORT,
+        URL_SAFETY_CHECKER_PORT,
+      ],
     },
     {
       provide: ResolveLink,

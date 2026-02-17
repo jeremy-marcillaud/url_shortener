@@ -1,11 +1,16 @@
-import { CreateLink } from './create-link';
+import { CreateLink, UrlNotSafeError } from './create-link';
 import type { HashGeneratorPort } from '../ports/hash-generator.port';
 import type { LinkRepositoryPort } from '../ports/link-repository.port';
+import type { UrlSafetyCheckerPort } from '../ports/url-safety-checker.port';
 import { LinkDomain } from '../models/domain/link-domain';
 
 describe('CreateLink', () => {
   const hashGenerator: HashGeneratorPort = {
     generate: () => 'kA9b2xLq',
+  };
+
+  const safeUrlChecker: UrlSafetyCheckerPort = {
+    isSafeUrl: jest.fn().mockResolvedValue(true),
   };
 
   it('should create a new link and return its id and hash', async () => {
@@ -15,7 +20,7 @@ describe('CreateLink', () => {
       findByHash: jest.fn().mockResolvedValue(null),
       save: saveMock,
     };
-    const useCase = new CreateLink(hashGenerator, repository);
+    const useCase = new CreateLink(hashGenerator, repository, safeUrlChecker);
 
     const result = await useCase.execute({ url: 'https://example.com' });
 
@@ -35,12 +40,30 @@ describe('CreateLink', () => {
       findByHash: jest.fn(),
       save: saveMock,
     };
-    const useCase = new CreateLink(hashGenerator, repository);
+    const useCase = new CreateLink(hashGenerator, repository, safeUrlChecker);
 
     const result = await useCase.execute({ url: 'https://example.com' });
 
     expect(result.id).toBe(existing.id);
     expect(result.hash).toBe('xY3mNpQr');
+    expect(saveMock).not.toHaveBeenCalled();
+  });
+
+  it('should throw UrlNotSafeError if url is unsafe', async () => {
+    const unsafeUrlChecker: UrlSafetyCheckerPort = {
+      isSafeUrl: jest.fn().mockResolvedValue(false),
+    };
+    const saveMock = jest.fn();
+    const repository: LinkRepositoryPort = {
+      findByUrl: jest.fn(),
+      findByHash: jest.fn(),
+      save: saveMock,
+    };
+    const useCase = new CreateLink(hashGenerator, repository, unsafeUrlChecker);
+
+    await expect(
+      useCase.execute({ url: 'https://malicious.com' }),
+    ).rejects.toThrow(UrlNotSafeError);
     expect(saveMock).not.toHaveBeenCalled();
   });
 });

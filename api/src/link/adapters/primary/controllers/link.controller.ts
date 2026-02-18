@@ -1,4 +1,9 @@
-import { Body, Controller, ForbiddenException, Post } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Post,
+  UnprocessableEntityException,
+} from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { CreateLinkDto } from '../dtos/request/create-link.dto';
 import { CreateLinkResponseDto } from '../dtos/response/create-link-response.dto';
@@ -24,7 +29,9 @@ export class LinkController {
       };
     } catch (error) {
       if (error instanceof UrlNotSafeError) {
-        throw new ForbiddenException('URL rejected for security reasons');
+        throw new UnprocessableEntityException(
+          'URL rejected for security reasons',
+        );
       }
       throw error;
     }

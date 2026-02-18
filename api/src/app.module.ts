@@ -3,6 +3,7 @@ import { APP_GUARD } from '@nestjs/core';
 import { ConfigModule } from '@nestjs/config';
 import { ThrottlerModule, ThrottlerGuard, minutes } from '@nestjs/throttler';
 import { LinkModule } from './link/link.module';
+import { AdsModule } from './ads/ads.module';
 
 @Module({
   imports: [
@@ -15,6 +16,7 @@ import { LinkModule } from './link/link.module';
       },
     ]),
     LinkModule,
+    AdsModule,
   ],
   providers: [{ provide: APP_GUARD, useClass: ThrottlerGuard }],
 })
